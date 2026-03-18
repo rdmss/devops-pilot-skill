@@ -15,13 +15,21 @@
       "backlog": "11",
       "in_progress": "31",
       "done": "41"
+    },
+    "issueTypes": {
+      "bug": "10039",
+      "story": "10004",
+      "task": "10037",
+      "epic": "10000"
     }
   },
   "git": {
     "enabled": true,
     "defaultBranch": "main",
     "remote": "origin",
-    "githubEnabled": true
+    "repoUrl": "acme/erp-system",
+    "githubEnabled": true,
+    "githubUser": "ana-silva"
   },
   "verifyCommand": "npm run build",
   "language": "en",

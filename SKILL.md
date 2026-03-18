@@ -117,6 +117,7 @@ c) If GitHub authenticated: confirm repo: "GitHub repo: {org}/{repo}. Correct?"
     "githubUser": "{username}"
   },
   "verifyCommand": null,
+  "language": "en",
   "setupAt": "{ISO}",
   "lastSync": null
 }

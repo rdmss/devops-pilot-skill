@@ -174,9 +174,9 @@ If something is missing, the wizard tells you exactly what to do:
 
 | Command | What it does |
 |:--------|:-------------|
-| `/devops-pilot triage {text}` | Analyze error/bug report, find root cause in code, create Jira issue |
+| `/devops-pilot triage {text}` | Analyze error/log/complaint, find root cause in code, create Jira issue |
 | `/devops-pilot create-issue {text}` | Create bug/feature/task from natural language |
-| `/devops-pilot create-epic {title}` | Create epic + break down into child stories |
+| `/devops-pilot create-epic {title} {spec}` | Create epic + break down spec into child stories |
 | `/devops-pilot create-from-notes {text}` | Extract multiple issues from meeting notes or emails |
 
 **Execute** (work on issues end-to-end)
@@ -187,11 +187,11 @@ If something is missing, the wizard tells you exactly what to do:
 | `/devops-pilot done {KEY}` | Commit + push + Jira comment + close issue |
 | `/devops-pilot pr {KEY}` | Create GitHub PR with Jira link |
 | `/devops-pilot merge {KEY}` | Merge PR, delete branch, cleanup |
-| `/devops-pilot review {KEY}` | Review a PR with code analysis |
+| `/devops-pilot review {KEY or PR}` | Review a PR with code analysis |
 | `/devops-pilot verify {KEY}` | Run build/tests before marking done |
 | `/devops-pilot comment {KEY}` | Add a Jira comment without closing |
 | `/devops-pilot reopen {KEY}` | Reopen a closed issue |
-| `/devops-pilot batch-done {K1 K2 ...}` | Close multiple already-implemented issues |
+| `/devops-pilot batch-done {KEY1} {KEY2} ...` | Close multiple already-implemented issues |
 
 **Edit & Organize** (modify issues and manage backlog)
 
@@ -689,7 +689,7 @@ Frontend already had the correct role check.
 | Requirement | Purpose | Required? |
 |:------------|:--------|:----------|
 | [Claude Code](https://claude.ai/claude-code) | Runtime | Yes |
-| [Atlassian MCP Plugin](https://github.com/anthropics/claude-code) | Jira integration | For Jira features |
+| [Atlassian MCP Plugin](https://www.npmjs.com/package/@anthropic/claude-code-atlassian) | Jira integration | For Jira features |
 | Git | Branch/commit/push | For Git features |
 | [GitHub CLI (`gh`)](https://cli.github.com/) | PR creation | For PR features |
 

@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.2.0] - 2026-03-18
+
+### Fixed
+- config.json.example: added missing `issueTypes`, `repoUrl`, `githubUser` fields
+- README: fixed parameter mismatches with SKILL.md (`create-epic`, `review`, `batch-done`)
+- README: fixed broken Atlassian MCP Plugin link
+- CHANGELOG: corrected command count from 27 to 28
+- SKILL.md: added `language` field to config schema
+
 ## [4.1.0] - 2026-03-18
 
 ### Changed
@@ -37,7 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `merge` command: merge GitHub PRs with squash/merge option, branch cleanup
 - `review` command: review PRs with code analysis and inline comments
 - Commands organized in 4 categories: Create, Execute, Edit & Organize, Manage
-- Total: 27 commands covering the complete dev lifecycle
+- Total: 28 commands covering the complete dev lifecycle
 
 ## [3.0.0] - 2026-03-18
 
