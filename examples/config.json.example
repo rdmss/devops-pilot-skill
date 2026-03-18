@@ -1,0 +1,29 @@
+{
+  "jira": {
+    "enabled": true,
+    "cloudId": "abc123-def456-ghi789",
+    "siteUrl": "mysite.atlassian.net",
+    "projectKey": "PD",
+    "projectId": "10100",
+    "projectName": "Producao Digital",
+    "assignee": {
+      "accountId": "70121:8f8abd2d-2039-4570-a55d-fb4099fc8a93",
+      "displayName": "Renan Miguel",
+      "email": "renan@rdmss.com.br"
+    },
+    "transitions": {
+      "backlog": "11",
+      "in_progress": "31",
+      "done": "41"
+    }
+  },
+  "git": {
+    "enabled": true,
+    "defaultBranch": "main",
+    "remote": "origin",
+    "githubEnabled": true
+  },
+  "language": "pt-BR",
+  "setupAt": "2026-03-18T06:30:00Z",
+  "lastSync": "2026-03-18T09:15:00Z"
+}
