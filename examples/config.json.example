@@ -1,15 +1,15 @@
 {
   "jira": {
     "enabled": true,
-    "cloudId": "abc123-def456-ghi789",
-    "siteUrl": "mysite.atlassian.net",
-    "projectKey": "PD",
-    "projectId": "10100",
-    "projectName": "Producao Digital",
+    "cloudId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "siteUrl": "acme.atlassian.net",
+    "projectKey": "ERP",
+    "projectId": "10001",
+    "projectName": "Acme ERP",
     "assignee": {
-      "accountId": "70121:8f8abd2d-2039-4570-a55d-fb4099fc8a93",
-      "displayName": "Renan Miguel",
-      "email": "renan@rdmss.com.br"
+      "accountId": "557058:a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "displayName": "Ana Silva",
+      "email": "ana@acme.dev"
     },
     "transitions": {
       "backlog": "11",
@@ -23,7 +23,8 @@
     "remote": "origin",
     "githubEnabled": true
   },
-  "language": "pt-BR",
-  "setupAt": "2026-03-18T06:30:00Z",
-  "lastSync": "2026-03-18T09:15:00Z"
+  "verifyCommand": "npm run build",
+  "language": "en",
+  "setupAt": "2026-01-15T10:00:00Z",
+  "lastSync": "2026-01-15T14:30:00Z"
 }

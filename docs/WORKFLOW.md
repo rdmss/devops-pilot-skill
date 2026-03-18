@@ -5,12 +5,15 @@
 ```
                 /work                         /done
   ⬜ pending ──────────► 🔧 in_progress ──────────► ✅ done
-                │                    │                  │
-  Jira:Backlog  │  Jira:In Progress  │  Jira:Done       │
-  Git: —        │  Git: branch       │  Git: committed  │
-                │  Codebase: analyze │  Git: pushed      │
-                │  Plan: present     │  Jira: commented  │
-                                     │  PR: suggested    │
+       ▲                      │                  │      │
+       │                      │                  │      │
+       │              Jira: In Progress   Jira: Done    │
+       │              Git: branch         Git: commit   │
+       │              Analyze codebase    Git: push     │
+       │              Plan & implement    Jira: comment │
+       │                                  PR: suggest   │
+       │                                                │
+       └───────────────── /reopen ──────────────────────┘
 ```
 
 ## Full Lifecycle
@@ -19,6 +22,7 @@
   ┌──────────────────────────────────────────────────┐
   │ 1. SYNC        Pull issues from Jira             │
   │                Create local .md files             │
+  │                Detect conflicts                   │
   │                Generate INDEX dashboard           │
   ├──────────────────────────────────────────────────┤
   │ 2. PLAN        Group by phase:                    │
@@ -30,17 +34,20 @@
   │                Analyze codebase                    │
   │                Implement fix/feature               │
   ├──────────────────────────────────────────────────┤
-  │ 4. DONE        Commit with conventional message   │
+  │ 4. VERIFY      Run build/tests (optional)         │
+  │                Report pass/fail                    │
+  ├──────────────────────────────────────────────────┤
+  │ 5. DONE        Commit with conventional message   │
   │                Push to remote                      │
   │                Comment on Jira with details        │
   │                Close issue in Jira                 │
   │                Check if epic can be closed         │
   ├──────────────────────────────────────────────────┤
-  │ 5. PR          Create GitHub PR                   │
+  │ 6. PR          Create GitHub PR                   │
   │                Link to Jira issue                  │
   │                Add test plan from criteria         │
   ├──────────────────────────────────────────────────┤
-  │ 6. CLOSE-EPICS Find epics with 100% done          │
+  │ 7. CLOSE-EPICS Find epics with 100% done          │
   │                Close them with summary comment     │
   └──────────────────────────────────────────────────┘
 ```
