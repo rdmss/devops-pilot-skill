@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-03-18
+
+### Added
+- `triage` command: analyze bug reports, find root cause in codebase, create structured Jira issue
+- `create-issue` command: create bugs/features/tasks from natural language
+- `create-epic` command: create epic + auto-decompose into child stories from spec
+- `create-from-notes` command: extract multiple issues from meeting notes, emails, or messages
+- Duplicate detection algorithm: checks Jira + local files before creating any issue
+- Root cause analysis: triage traces errors to specific files and lines
+- Issue type discovery during setup: maps Bug, Story, Task, Epic IDs
+- `root_cause` field in issue frontmatter for triaged bugs
+- Structured Jira comment templates for different scenarios
+- User confirmation before creating issues: always shows structured preview first
+- Commands now organized in three categories: Create & Triage, Execute, Manage
+
+### Changed
+- Skill identity: from "workflow executor" to "complete dev workflow engine" (creates + executes + manages)
+- Setup wizard now also discovers issue type IDs via `getJiraIssueTypeMetaWithFields`
+- Description field in SKILL.md expanded with creation/triage trigger keywords
+- Safety rules expanded from 14 to 16 (duplicate safety + user confirmation)
+
 ## [1.1.0] - 2026-03-18
 
 ### Added

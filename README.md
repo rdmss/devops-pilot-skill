@@ -151,22 +151,139 @@ The setup wizard auto-discovers everything:
 
 ### Overview
 
+**Create & Triage** (turn text into structured Jira issues)
+
 | Command | What it does |
 |:--------|:-------------|
-| `/rdmss-jira-git` | First run: setup wizard. After: status dashboard |
-| `/rdmss-jira-git sync` | Pull issues from Jira to local markdown files |
-| `/rdmss-jira-git status` | Dashboard with progress by epic and priority |
-| `/rdmss-jira-git plan` | Execution plan by phases (bugs first, features later) |
+| `/rdmss-jira-git triage {text}` | Analyze error/bug report, find root cause in code, create Jira issue |
+| `/rdmss-jira-git create-issue {text}` | Create bug/feature/task from natural language |
+| `/rdmss-jira-git create-epic {title}` | Create epic + break down into child stories |
+| `/rdmss-jira-git create-from-notes {text}` | Extract multiple issues from meeting notes or emails |
+
+**Execute** (work on issues end-to-end)
+
+| Command | What it does |
+|:--------|:-------------|
 | `/rdmss-jira-git work {KEY}` | Assign + branch + analyze codebase + implement |
 | `/rdmss-jira-git done {KEY}` | Commit + push + Jira comment + close issue |
 | `/rdmss-jira-git pr {KEY}` | Create GitHub PR with Jira link |
-| `/rdmss-jira-git comment {KEY}` | Add a Jira comment without closing |
 | `/rdmss-jira-git verify {KEY}` | Run build/tests before marking done |
+| `/rdmss-jira-git comment {KEY}` | Add a Jira comment without closing |
 | `/rdmss-jira-git reopen {KEY}` | Reopen a closed issue |
 | `/rdmss-jira-git batch-done {K1 K2 ...}` | Close multiple already-implemented issues |
+
+**Manage** (track and organize)
+
+| Command | What it does |
+|:--------|:-------------|
+| `/rdmss-jira-git` | Setup wizard (first time) or status dashboard |
+| `/rdmss-jira-git sync` | Pull issues from Jira to local markdown files |
+| `/rdmss-jira-git status` | Dashboard with progress by epic and priority |
+| `/rdmss-jira-git plan` | Execution plan by phases (bugs first, features later) |
 | `/rdmss-jira-git close-epics` | Auto-close epics with 100% children done |
 | `/rdmss-jira-git branch {name}` | Create branch (Git-only) |
 | `/rdmss-jira-git commit` | Smart commit with conventional messages |
+
+---
+
+### `/rdmss-jira-git triage`
+
+The power command. Give it any bug report — error log, user complaint, stack trace — and it finds the root cause in your code and creates a structured Jira issue:
+
+```
+> /rdmss-jira-git triage "Users report that refunds are not showing up
+  in their account after processing. Error in logs: PaymentRecord
+  created without orderId reference."
+
+ Analyzing codebase...
+ Found: processRefund() in src/services/orderService.ts:218
+ Root cause: PaymentRecord.create() missing orderId field (line 234)
+
+ Checking for duplicates...
+ No similar issues found in Jira.
+
+ Creating issue...
+ ✓ ERP-42 created: "Refund not processing — missing orderId"
+   Type: Bug | Priority: Highest | Epic: ERP-3 (Payments)
+
+   Root cause: orderService.ts:234 — orderId not passed to PaymentRecord
+   Suggested fix: Add orderId: order.id to the create call
+
+ Start working on it? /rdmss-jira-git work ERP-42
+```
+
+---
+
+### `/rdmss-jira-git create-issue`
+
+Turn natural language into a structured Jira issue:
+
+```
+> /rdmss-jira-git create-issue "We need to add CSV export to the
+  reports page. Users should be able to export any report as CSV
+  with one click. High priority."
+
+ Detected type: Feature (Story)
+ Checking for duplicates... none found.
+
+ ✓ ERP-25 created: "Add CSV export to reports page"
+   Type: Story | Priority: High | Epic: ERP-3 (Reports)
+
+   Acceptance Criteria:
+   - [ ] Export button visible on all report pages
+   - [ ] CSV contains all visible columns
+   - [ ] Large reports export without timeout
+```
+
+---
+
+### `/rdmss-jira-git create-epic`
+
+Build a complete backlog from a specification:
+
+```
+> /rdmss-jira-git create-epic "Payment System Overhaul" "We need to
+  support multiple payment gateways, add refund automation, and
+  implement subscription billing."
+
+ ✓ Epic ERP-50 created: "Payment System Overhaul"
+
+ Breaking down into stories...
+ 1. ✨ ERP-51: Multi-gateway payment abstraction (High)
+ 2. ✨ ERP-52: Stripe integration (High)
+ 3. ✨ ERP-53: PayPal integration (Medium)
+ 4. ✨ ERP-54: Automated refund processing (High)
+ 5. ✨ ERP-55: Subscription billing engine (High)
+ 6. ✨ ERP-56: Billing dashboard and reports (Medium)
+
+ Create all 6 stories? (y/n)
+```
+
+---
+
+### `/rdmss-jira-git create-from-notes`
+
+Extract issues from meeting notes, emails, or Slack threads:
+
+```
+> /rdmss-jira-git create-from-notes "From today's standup:
+  - The login page is broken on Safari
+  - We need dark mode before the demo next week
+  - API docs are outdated, someone needs to update them
+  - The export is timing out on large datasets"
+
+ Found 4 items:
+ 1. 🐛 Bug: "Login broken on Safari" (High)
+ 2. ✨ Feature: "Dark mode support" (High) — deadline mentioned
+ 3. 📋 Task: "Update API documentation" (Medium)
+ 4. 🐛 Bug: "Export timeout on large datasets" (High)
+
+ Checking for duplicates...
+ ⚠️  Item 4 may be a duplicate of ERP-38 "Export performance issues"
+     → Add context to ERP-38 instead? (y/n)
+
+ Create items 1, 2, 3? (y/n)
+```
 
 ---
 
