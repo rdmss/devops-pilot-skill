@@ -450,13 +450,17 @@ Closes the loop:
 
 ```
  Collecting evidence...
- Files changed: src/services/orderService.ts
+ Analyzing diff: 1 file changed, 3 insertions
+ Root cause identified: orderId missing from PaymentRecord.create()
  Criteria: 2/2 validated
 
+ ✓ Verify: npm run build passed (0 errors)
  ✓ Git: committed "fix(ERP-42): add orderId to refund payment record"
+       commit: a3f8c21
  ✓ Git: pushed to origin/ERP-42-refund-processing
- ✓ Jira: comment added with implementation details
+ ✓ Jira: rich comment added (root cause + files + criteria)
  ✓ Jira: ERP-42 transitioned to "Done"
+ ✓ GitHub: issue #42 closed with commit reference
  ✓ Local: INDEX.md regenerated
 
  Epic ERP-2 (Payments): 7/8 children done.
@@ -465,19 +469,48 @@ Closes the loop:
  Create PR? Use: /devops-pilot pr ERP-42
 ```
 
-The Jira comment is auto-generated:
+The Jira comment is **rich and individualized** — never generic:
 
 ```markdown
-**Bug fixed — ERP-42**
+### Bug fixed — ERP-42
+
+**Root cause:**
+PaymentRecord.create() in processRefund() was missing the orderId
+field, causing refunds to be created without a reference to the
+original order. This made them invisible in the account history.
+
+**Solution:**
+Added orderId: order.id to the PaymentRecord.create() call in
+processRefund(), ensuring every refund is linked to its order.
 
 **Branch:** `ERP-42-refund-processing`
+**Commit:** `a3f8c21` — `fix(ERP-42): add orderId to refund payment record`
 
 **Files changed:**
-- `src/services/orderService.ts`: added orderId to refund payment record
+| File | Change |
+|------|--------|
+| `src/services/orderService.ts` | Added `orderId: order.id` to PaymentRecord.create() at line 234 |
 
-**Validations:**
+**Acceptance criteria:**
 - [x] Refund creates payment record with orderId
 - [x] Balance updates correctly after refund
+
+**Build:** Verified — `npm run build` passed with 0 errors
+```
+
+The GitHub issue also gets a rich close comment:
+
+```markdown
+**Resolved in [`a3f8c21`](https://github.com/acme/erp-system/commit/a3f8c21)**
+
+**Bug:** Refund not processing — missing orderId in PaymentRecord
+
+**Changes:**
+- `src/services/orderService.ts`: Added orderId to PaymentRecord.create()
+
+**Root cause:** processRefund() created records without order reference
+
+**Jira:** [ERP-42](https://acme.atlassian.net/browse/ERP-42)
 ```
 
 ---

@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.0] - 2026-03-18
+
+### Changed
+- **Rich closing comments**: complete rewrite of Jira and GitHub comment templates
+  - Bug comments now include root cause analysis + solution explanation
+  - Feature comments describe what was built and where it lives
+  - All comments include file-level change table, commit hash, build status
+  - "Already implemented" comments list evidence with specific locations
+  - GitHub issue close comments include commit link + Jira cross-reference
+  - Progress update template for `comment` command
+  - Triage template with impact analysis
+- `done` command now reads git diff to understand changes per file (not just filenames)
+- `done` captures and includes commit hash in all comments
+- `batch-done` generates individual rich comments per issue (never reuses same text)
+- README examples updated to show rich comment output
+- Added 8 rules for rich comments (Section 8)
+- PR body template includes change table and screenshots section
+
 ## [4.0.0] - 2026-03-18
 
 ### Added

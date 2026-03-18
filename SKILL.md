@@ -182,13 +182,27 @@ Assign + branch + analyze + implement.
 3. Local: frontmatter + INDEX. 4. Codebase analysis + plan. 5. Begin.
 
 ### `/devops-pilot done {KEY}`
-1. Collect evidence (files_changed or git diff).
-2. Verify (if `verifyCommand` set): run build/tests. Fail → stop.
-3. Git: stage, commit `fix|feat|chore({KEY}): {summary}`, push.
-4. Jira: structured comment (branch, files, validations) + transition done.
-5. Local: frontmatter + criteria `[x]` + implementation + INDEX.
-6. Epic check: all siblings done? Offer close.
-7. PR suggestion.
+1. **Collect evidence**:
+   - Read `files_changed` from frontmatter, or `git diff --name-only {defaultBranch}...HEAD`
+   - For each file: read the diff to understand WHAT changed (not just the filename)
+   - Read acceptance criteria from issue file
+   - Read `## Implementation` section
+   - If bug: identify the root cause from the code changes
+   - If feature: summarize what was built and where it lives
+2. **Verify** (if `verifyCommand` set): run build/tests. Fail → stop and report.
+3. **Git** (if enabled): stage, commit `fix|feat|chore({KEY}): {summary}`, push. Capture commit hash.
+4. **Jira** (if enabled): generate **rich comment** using templates from Section 8. The comment MUST include:
+   - Root cause (bugs) or what was built (features)
+   - Commit hash + message
+   - Table of files with specific changes per file
+   - All acceptance criteria with checkmarks
+   - Build verification status
+   - Use `addCommentToJiraIssue` with `contentFormat: "markdown"`
+   - Transition to done
+5. **GitHub** (if enabled): if a GitHub issue exists for this key, close it with a **rich comment** including commit link, changes summary, and Jira link.
+6. **Local**: update frontmatter (status, branch, files_changed, commit hash), mark criteria `[x]`, update `## Implementation` with detailed summary, regenerate INDEX.
+7. **Epic check**: all siblings done? Offer to close epic.
+8. **PR suggestion**: if Git enabled, suggest creating PR.
 
 ### `/devops-pilot done {KEY} --already-implemented`
 Analyze codebase, confirm existing implementation, comment, close.
@@ -207,7 +221,14 @@ Run `verifyCommand` or auto-detect (npm run build, npm test, cargo build). Repor
 Transition back to in_progress, update local state, regenerate INDEX.
 
 ### `/devops-pilot batch-done {KEY1} {KEY2} ...`
-Apply `done --already-implemented` to multiple issues. Regenerate INDEX once.
+Apply `done --already-implemented` to multiple issues. For EACH issue:
+1. Analyze codebase to find WHERE it's implemented (files, functions, components)
+2. Generate an **individual rich comment** using the "Already Implemented" template — listing specific files, evidence, and criteria
+3. Close in Jira with the individual comment
+4. Close GitHub issue (if exists) with individual comment including commit reference
+5. Update local file
+
+**Never use the same comment for multiple issues.** Each gets its own analysis. Regenerate INDEX once at the end.
 
 ### `/devops-pilot branch {name}` / `/devops-pilot commit`
 Git-only. Create branch or smart-commit.
@@ -389,31 +410,163 @@ Used by `triage`, `create-issue`, `create-from-notes`:
 
 ---
 
-## 8. Jira Comment Templates
+## 8. Closing Comment Templates
 
-**Bug Fixed:**
-```
-**Bug fixed — {KEY}**
+When closing an issue via `done`, the skill generates **rich, individualized comments** for both Jira and GitHub. Never use generic messages. Every comment must describe what was actually done for THIS specific issue.
+
+### Jira Comment — Bug Fixed
+```markdown
+### Bug fixed — {KEY}
+
+**Root cause:**
+{1-2 sentence explanation of what was wrong and why}
+
+**Solution:**
+{1-2 sentence explanation of what was changed to fix it}
+
 **Branch:** `{branch}`
-**Root cause:** {root_cause}
-**Files changed:** - `{file}`: {desc}
-**Validations:** - [x] criterion
+**Commit:** `{commit_hash}` — `{commit_message}`
+
+**Files changed:**
+| File | Change |
+|------|--------|
+| `{file1}` | {specific change: "Added positionId to StockMovement.create()"} |
+| `{file2}` | {specific change: "Removed redundant router.refresh() call"} |
+
+**Acceptance criteria:**
+- [x] {criterion 1 — specific to this issue}
+- [x] {criterion 2}
+
+**Build:** Verified — `{verifyCommand}` passed with 0 errors
 ```
 
-**Feature Implemented:**
-```
-**Feature implemented — {KEY}**
+### Jira Comment — Feature Implemented
+```markdown
+### Feature implemented — {KEY}
+
+**What was built:**
+{2-3 sentence summary of the feature, what it does, where it lives in the system}
+
 **Branch:** `{branch}`
-**Files changed:** - `{file}`: {desc}
-**Validations:** - [x] criterion
+**Commit:** `{commit_hash}` — `{commit_message}`
+
+**Files changed:**
+| File | Change |
+|------|--------|
+| `{file1}` | {specific: "New CRUD router with 6 endpoints"} |
+| `{file2}` | {specific: "Page with table, add/edit modals, delete confirmation"} |
+| `{file3}` | {specific: "Added menu item under Insumos dropdown"} |
+
+**New components/routes:**
+- `{path1}` — {description}
+- `{path2}` — {description}
+
+**Acceptance criteria:**
+- [x] {criterion 1}
+- [x] {criterion 2}
+- [x] {criterion 3}
+
+**Build:** Verified — 0 errors
 ```
 
-**Triage (on duplicate):**
+### Jira Comment — Already Implemented
+```markdown
+### Already implemented — {KEY}
+
+This feature was found already implemented in the codebase.
+
+**Where it lives:**
+| Component | Location |
+|-----------|----------|
+| Backend | `{file}` — {function/mutation name} |
+| Frontend | `{file}` — {component name} |
+| Database | `{model}` in `prisma/schema.prisma` |
+
+**Evidence:**
+- {specific evidence: "getNextTransportBoxBarcode query generates sequential CX-NNNN codes"'}
+- {specific evidence: "BulkCreateTransportBoxModal supports batch of up to 100"}
+
+**Acceptance criteria:**
+- [x] {criterion verified against existing code}
 ```
-**Additional context (triage):**
-{new info}
-**Codebase analysis:** - `{file}:{line}`: {finding}
+
+### Jira Comment — Progress Update (via `comment`)
+```markdown
+### Progress update — {KEY}
+
+**Status:** {investigating | in progress | blocked | ready for review}
+
+**Findings so far:**
+{what was discovered, analyzed, or implemented}
+
+**Next steps:**
+- {what remains to be done}
+
+**Blockers:** {none | description of blocker}
 ```
+
+### Jira Comment — Triage (new issue from analysis)
+```markdown
+### Triage analysis
+
+**Reported problem:**
+{original user report or error message}
+
+**Root cause found:**
+`{file}:{line}` — {explanation of the bug}
+
+**Impact:** {what breaks, who is affected, severity}
+
+**Suggested fix:**
+{concrete code change needed}
+
+**Related issues:** {KEY1, KEY2 or "none found"}
+```
+
+### GitHub Issue Close Comment
+When closing GitHub issues via `done`, use a rich comment (not generic):
+
+```markdown
+**Resolved in [`{short_hash}`]({commit_url})**
+
+**{type}:** {summary}
+
+**Changes:**
+{bullet list of specific changes per file}
+
+**Jira:** [{KEY}](https://{siteUrl}/browse/{KEY})
+```
+
+### GitHub PR Body (via `pr`)
+```markdown
+## Summary
+{2-3 bullets describing what was done and why}
+
+## Changes
+| File | Description |
+|------|-------------|
+| `{file}` | {change} |
+
+## Jira
+[{KEY} — {summary}](https://{siteUrl}/browse/{KEY})
+
+## Test plan
+- [ ] {acceptance criterion 1}
+- [ ] {acceptance criterion 2}
+
+## Screenshots
+{if UI changes, describe what changed visually}
+```
+
+### Rules for rich comments
+1. **Never generic**: every comment must reference specific files, functions, and changes for THIS issue.
+2. **Always include commit**: hash + message so changes are traceable.
+3. **Always include files**: list every file that was modified with what changed.
+4. **Always include criteria**: show which acceptance criteria were validated.
+5. **Root cause for bugs**: explain WHY it was broken, not just what was changed.
+6. **What was built for features**: explain what the feature DOES, not just what files were created.
+7. **Build status**: mention if verify/build passed.
+8. **Cross-reference**: link Jira from GitHub, link GitHub from Jira.
 
 ---
 
